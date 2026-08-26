@@ -1,0 +1,7 @@
+record_id,schema_version,data_version,revision,manufacturer,model,ac_power_kw,ac_apparent_power_kva,nominal_voltage_v,phases,pf_min,pf_max,nominal_ac_current_a,max_ac_current_a,recommended_max_dc_kwp,dc_ac_ratio,mppt_count,max_dc_input_current_a,input_current_basis,ambient_reference_c,derating_profile,verification_status,source_id,effective_from,effective_to,notes
+INV-SUNGROW-SG36CX-P2,1.0.0,2026.08-draft,1,Sungrow,SG36CX-P2,36,,,,,,,,50.4,1.40,,,,,,MANUFACTURER_DATA,SRC-INV-001,,,Manufacturer datasheet and electrical limits required
+INV-SUNGROW-SG40CX-P2,1.0.0,2026.08-draft,1,Sungrow,SG40CX-P2,40,,,,,,,,56.0,1.40,,,,,,MANUFACTURER_DATA,SRC-INV-001,,,Manufacturer datasheet and electrical limits required
+INV-SUNGROW-SG50CX-P2,1.0.0,2026.08-draft,1,Sungrow,SG50CX-P2,50,,,,,,,,70.0,1.40,,,,,,MANUFACTURER_DATA,SRC-INV-001,,,Manufacturer datasheet and electrical limits required
+INV-SUNGROW-SG125CX-P2,1.0.0,2026.08-draft,1,Sungrow,SG125CX-P2,125,,,,,,,,175.0,1.40,,,,,,MANUFACTURER_DATA,SRC-INV-001,,,Manufacturer datasheet and electrical limits required
+INV-SUNGROW-SG150CX,1.0.0,2026.08-draft,1,Sungrow,SG150CX,150,,,,,,,,210.0,1.40,,,,,,MANUFACTURER_DATA,SRC-INV-001,,,Manufacturer datasheet and electrical limits required
+INV-SUNGROW-SG350HX-20,1.0.0,2026.08-draft,1,Sungrow,SG350HX-20,350,352,,,,,,,,,6,450,6x75A unspecified topology,30,UNKNOWN,MANUFACTURER_DATA,SRC-INV-001,,,No recommended DC kWp; do not infer 1.40 ratio or derating

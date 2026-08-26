@@ -1,0 +1,12 @@
+record_id,schema_version,data_version,revision,manufacturer,quotation_number,quotation_date,rating_kva,hv_voltage_v,lv_voltage_v,unit_price_thb,vat_included,delivery_included,crane_included,installation_included,testing_included,utility_inspection_included,valid_until,verification_status,source_id,effective_from,effective_to,notes
+TPR-EKARAT-20260701-0160-24-416,1.0.0,2026.08-draft,1,Ekarat,,2026-07-01,160,24000,416/240,258000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-01,,Transcribed price; quotation number validity and commercial scope unknown
+TPR-EKARAT-20260701-0250-24-416,1.0.0,2026.08-draft,1,Ekarat,,2026-07-01,250,24000,416/240,346000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-01,,Transcribed price; quotation number validity and commercial scope unknown
+TPR-EKARAT-20260701-0315-24-416,1.0.0,2026.08-draft,1,Ekarat,,2026-07-01,315,24000,416/240,350000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-01,,Transcribed price; quotation number validity and commercial scope unknown
+TPR-QTC-20260721-0500-22-400,1.0.0,2026.08-draft,1,QTC,,2026-07-21,500,22000,400/230,380000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Alternative product price; do not aggregate catalogue options
+TPR-QTC-20260721-0630-22-400,1.0.0,2026.08-draft,1,QTC,,2026-07-21,630,22000,400/230,445000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Alternative product price; do not aggregate catalogue options
+TPR-QTC-20260721-1250-22-400,1.0.0,2026.08-draft,1,QTC,,2026-07-21,1250,22000,400/230,750000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Alternative product price; do not aggregate catalogue options
+TPR-QTC-20260721-2000-22-400,1.0.0,2026.08-draft,1,QTC,,2026-07-21,2000,22000,400/230,1170000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Alternative product price; do not aggregate catalogue options
+TPR-QTC-20260721-2500-22-400,1.0.0,2026.08-draft,1,QTC,,2026-07-21,2500,22000,400/230,1450000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Alternative product price; do not aggregate catalogue options
+TPR-QTC-20260721-2000-22-800,1.0.0,2026.08-draft,1,QTC,,2026-07-21,2000,22000,800/462,1030000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Voltage-specific alternative; not interchangeable with 400/230 V
+TPR-QTC-20260721-2500-22-800,1.0.0,2026.08-draft,1,QTC,,2026-07-21,2500,22000,800/462,1340000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Voltage-specific alternative; not interchangeable with 400/230 V
+TPR-QTC-20260721-3000-22-800,1.0.0,2026.08-draft,1,QTC,,2026-07-21,3000,22000,800/462,1500000,NO,,,,,,,DRAFT,SRC-TRF-001,2026-07-21,,Voltage-specific alternative; not interchangeable with 400/230 V

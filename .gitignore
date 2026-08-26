@@ -20,3 +20,12 @@ htmlcov/
 Thumbs.db
 .vscode/
 .idea/
+
+# Build, coverage, and generated project exports
+build/
+dist/
+*.egg-info/
+coverage.xml
+outputs/
+*.tmp
+~$*.xlsx

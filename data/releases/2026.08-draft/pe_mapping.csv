@@ -1,0 +1,11 @@
+record_id,schema_version,data_version,revision,phase_material,pe_material,phase_csa_mm2,pe_csa_mm2,rule_family,applicability,verification_status,source_id,effective_from,effective_to,notes
+PE-CU-035-025,1.0.0,2026.08-draft,1,CU,CU,35,25,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-050-025,1.0.0,2026.08-draft,1,CU,CU,50,25,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-070-035,1.0.0,2026.08-draft,1,CU,CU,70,35,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-095-050,1.0.0,2026.08-draft,1,CU,CU,95,50,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-120-070,1.0.0,2026.08-draft,1,CU,CU,120,70,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Image mapping is not strict arithmetic S/2
+PE-CU-150-095,1.0.0,2026.08-draft,1,CU,CU,150,95,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Image mapping is not strict arithmetic S/2
+PE-CU-185-095,1.0.0,2026.08-draft,1,CU,CU,185,95,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-240-120,1.0.0,2026.08-draft,1,CU,CU,240,120,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-300-150,1.0.0,2026.08-draft,1,CU,CU,300,150,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Normative source and fault-duty precedence absent
+PE-CU-400-240,1.0.0,2026.08-draft,1,CU,CU,400,240,S_OVER_2_IMAGE,Exact lookup only,DRAFT,SRC-WIR-002,,,Image mapping is not strict arithmetic S/2

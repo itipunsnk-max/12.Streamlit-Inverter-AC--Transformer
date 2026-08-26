@@ -1,0 +1,5 @@
+record_id,schema_version,data_version,revision,manufacturer,model,role,poles,voltage_v,trip_setting_a,frame_rating_a,breaking_capacity_ka,terminal_temp_c,adjustable_settings,coordination_status,verification_status,source_id,effective_from,effective_to,notes
+BRK-PLACEHOLDER-SMALL-063-075,1.0.0,2026.08-draft,1,,,INVERTER_OUTGOING,,,63,75,,,,NOT_ASSESSED,DRAFT,SRC-INV-002,,,Likely AT/AF interpretation from low-resolution example; not selectable final equipment
+BRK-PLACEHOLDER-LARGE-540-600-A,1.0.0,2026.08-draft,1,,,INVERTER_OUTGOING,,,540,600,,,,NOT_ASSESSED,DRAFT,SRC-INV-002,,,First large branch placeholder; exact label meaning unconfirmed
+BRK-PLACEHOLDER-LARGE-540-600-B,1.0.0,2026.08-draft,1,,,INVERTER_OUTGOING,,,540,600,,,,NOT_ASSESSED,DRAFT,SRC-INV-002,,,Second large branch placeholder; exact label meaning unconfirmed
+BRK-PLACEHOLDER-INCOMING-1063-1250,1.0.0,2026.08-draft,1,,,MAIN_INCOMING,,,1063,1250,,,,NOT_ASSESSED,DRAFT,SRC-INV-002,,,1063 A may be calculated current rather than trip setting; review required
