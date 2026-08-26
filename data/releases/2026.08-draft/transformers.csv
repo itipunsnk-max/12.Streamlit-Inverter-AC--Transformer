@@ -1,0 +1,18 @@
+record_id,schema_version,data_version,revision,manufacturer,model,transformer_type,rating_kva,hv_voltage_v,lv_voltage_v,phases,vector_group,impedance_pct,loss_class,installation_eligibility,availability_status,verification_status,source_id,effective_from,effective_to,notes
+TRF-GENERIC-0030,1.0.0,2026.08-draft,1,,,UNSPECIFIED,30,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0050,1.0.0,2026.08-draft,1,,,UNSPECIFIED,50,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0100,1.0.0,2026.08-draft,1,,,UNSPECIFIED,100,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0160,1.0.0,2026.08-draft,1,,,UNSPECIFIED,160,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0250,1.0.0,2026.08-draft,1,,,UNSPECIFIED,250,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0315,1.0.0,2026.08-draft,1,,,UNSPECIFIED,315,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0400,1.0.0,2026.08-draft,1,,,UNSPECIFIED,400,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0500,1.0.0,2026.08-draft,1,,,UNSPECIFIED,500,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0630,1.0.0,2026.08-draft,1,,,UNSPECIFIED,630,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-0800,1.0.0,2026.08-draft,1,,,UNSPECIFIED,800,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; yard band missing
+TRF-GENERIC-1000,1.0.0,2026.08-draft,1,,,UNSPECIFIED,1000,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-1250,1.0.0,2026.08-draft,1,,,UNSPECIFIED,1250,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-1500,1.0.0,2026.08-draft,1,,,UNSPECIFIED,1500,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-1600,1.0.0,2026.08-draft,1,,,UNSPECIFIED,1600,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-2000,1.0.0,2026.08-draft,1,,,UNSPECIFIED,2000,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; not an approved product
+TRF-GENERIC-2500,1.0.0,2026.08-draft,1,,,UNSPECIFIED,2500,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Standard sizing option only; yard band missing
+TRF-GENERIC-3000,1.0.0,2026.08-draft,1,,,UNSPECIFIED,3000,,,,,,,UNKNOWN,UNCONFIRMED,DRAFT,SRC-TRF-001,,,Largest supplied standard option; yard band missing
