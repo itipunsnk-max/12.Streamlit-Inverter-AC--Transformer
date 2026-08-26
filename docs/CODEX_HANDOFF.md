@@ -5,8 +5,8 @@
 | Field | Value |
 |---|---|
 | Repository branch | `implementation-v1` |
-| Last committed checkpoint | `3d3fdce phase-0: complete repository audit` |
-| Current worktree | Phase 1 through Phase 3 changes pending review and commit; `RESUME.txt` remains untouched and untracked |
+| Last committed checkpoint | `ecca57d checkpoint-phase0-3` |
+| Current worktree | Clean after the Phase 0–3 checkpoint commit; `RESUME.txt` remains untouched and untracked |
 | Completed scope | Phase 0, Phase 1, Phase 2, and Phase 3 only |
 | Current data release | `2026.08-draft` / `DRAFT` |
 
