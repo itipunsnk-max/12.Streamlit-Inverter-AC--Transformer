@@ -1,5 +1,9 @@
 # Data Model — Release `2026.08-draft`
 
+## Phase 0 implementation boundary
+
+This document is the proposed data contract, not a claim that Phase 1 is complete. In Phase 0, only `sources.csv` is an audit-controlled registry. The other CSV extracts present in the checkpoint are preliminary inputs retained for later review. `manifest.json`, `design_rules.csv`, and `boq_templates.csv` do not yet exist; creating and validating them belongs to Phase 1. Consequently, the current directory must not be loaded or described as an approved runtime `ReferenceSnapshot`.
+
 ## 1. Versioning and common record contract
 
 All seed files are UTF-8 CSV except `manifest.json`. Data records use stable uppercase IDs and carry:

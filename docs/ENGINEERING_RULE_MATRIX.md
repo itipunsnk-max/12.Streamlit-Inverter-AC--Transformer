@@ -17,6 +17,30 @@ This matrix records what the repository supports, not what an external standard 
 
 Finding severities are independent: `BLOCKER`, `WARNING`, `REVIEW`, and `INFO`.
 
+## Rule-to-source registry
+
+These links identify repository provenance only; they do not upgrade a rule's verification status. Where an implementation policy was introduced to correct or safely bound a prototype, the linked source is the artifact that created the need for that policy.
+
+| Rule IDs | Source IDs | Traceability note |
+|---|---|---|
+| INV-001, INV-002, INV-003, INV-004, INV-005, INV-006, INV-007, INV-008, INV-009 | SRC-INV-001 | Product values and the model-specific ratio/fallback context |
+| INV-010 | SRC-INV-002 | Illustrative SLD only |
+| AMP-001, AMP-002, AMP-003, AMP-004, AMP-005 | SRC-AMP-001, SRC-AMP-002, SRC-AMP-003, SRC-AMP-004, SRC-AMP-005 | The five-slide thermal-design evidence set is incomplete and must be reviewed together |
+| AMP-006 | SRC-WIR-005 | Selected buried-XLPE table excerpt |
+| AMP-007, AMP-008, AMP-009 | SRC-WIR-004 | Selected grouping-factor excerpt and its stated exceptions |
+| PRO-001, PRO-002 | SRC-INV-002 | SLD labels expose candidates and missing protection evidence |
+| CAB-001, CAB-002, CAB-003 | SRC-WIR-003 | Workbook catalogue and validation defects |
+| PE-001 | SRC-WIR-002 | Image mapping only |
+| PE-002 | SRC-WIR-001, SRC-WIR-002 | Empty text file plus partial image demonstrate missing scope |
+| CON-001, CON-002, CON-003, CON-004 | SRC-WIR-003 | Workbook fill rules and screening limitations |
+| TRF-001, TRF-002, TRF-003, TRF-004, TRF-005, TRF-006, TRF-007 | SRC-TRF-001 | Draft transformer estimator specification |
+| INS-001, INS-002 | SRC-TRF-001, SRC-TRF-002, SRC-TRF-003 | Specification and installation illustrations; no utility eligibility table |
+| YARD-001, YARD-002, YARD-003 | SRC-TRF-001, SRC-TRF-005 | One-transformer draft quantities and drawing |
+| YARD-004, YARD-005, YARD-006, YARD-007 | SRC-TRF-001, SRC-TRF-006 | Two-transformer draft quantities and missing bands |
+| GND-001, GND-002, GND-003 | SRC-TRF-001, SRC-TRF-004, SRC-TRF-005, SRC-TRF-006 | Draft grounding guidance and unresolved topology |
+| BOQ-001, BOQ-002, BOQ-003, BOQ-004 | SRC-TRF-001 | Draft BOQ requirements and scope conflicts |
+| CST-001, CST-002, CST-003, CST-004, CST-005 | SRC-TRF-001 | Draft prices plus owner-pending costing policies |
+
 ## Inverter and AC-current rules
 
 | Rule ID | Rule / source evidence | Status | Implementation treatment |

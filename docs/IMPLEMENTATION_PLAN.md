@@ -12,7 +12,7 @@
 
 ## 1. Current source inventory
 
-The repository contains 18 engineering/reference files under four numbered folders, plus `README.md`, `.gitignore`, and a ZIP reference snapshot. The ZIP contains the same 18 reference files byte-for-byte. The canonical inventory, byte sizes, and SHA-256 hashes are recorded in `data/releases/2026.08-draft/sources.csv`.
+The audited baseline contains 21 files: 18 engineering/reference files under four numbered folders, plus `README.md`, `.gitignore`, and a ZIP reference snapshot. The ZIP contains the same 18 reference files byte-for-byte. The canonical Phase 0 inventory, byte sizes, and SHA-256 hashes for all 21 files are recorded in `data/releases/2026.08-draft/sources.csv`.
 
 | Domain | Files | Current maturity |
 |---|---:|---|
@@ -22,6 +22,12 @@ The repository contains 18 engineering/reference files under four numbered folde
 | Transformer / installation / BOQ | 1 Markdown, 4 PNG/JPG | Most complete requirements source; rules and prices remain draft |
 
 There is no application package, test suite, dependency manifest, CI workflow, runtime master data, or approved engineering rule set in the audited baseline.
+
+### Checkpoint boundary
+
+The preceding sentence describes commit `14c6ec0`, the baseline that was audited. Checkpoint commit `24d986b` also contains partial Phase 1–9 implementation artifacts. They are not evidence that those phases are complete and are frozen during Phase 0 completion. In particular, there is no release manifest and no Phase 1 contract-test suite; therefore `data/releases/2026.08-draft/` is not yet a loadable approved runtime release.
+
+Phase 0 completion is limited to the three planning documents, the 21-row source registry, explicit rule-to-source links, conflict/owner-decision records, and automated repository-audit tests. Runtime schemas, manifest generation, calculation code, Streamlit UI, CI coverage gates, and application tests remain later-phase work.
 
 ## 2. Product objective and workflow
 
@@ -225,7 +231,7 @@ All engineering and cost outputs display the Thai budgetary disclaimer from the 
 
 | Phase | Objective and principal changes | Dependencies / rules | Required tests | Definition of done |
 |---|---|---|---|---|
-| 0 — Repository audit | Publish these three docs, source registry, hashes, conflicts, owner checklist, and draft data release | None | Inventory, hashes, rule-source links | Every known rule is classified; owner gaps are explicit |
+| 0 — Repository audit | Publish these three docs, 21-row source registry, hashes, ZIP comparison, conflicts, and owner checklist | None | Inventory, hashes, ZIP duplicate, rule-source links | Every known rule is classified; owner gaps are explicit; Phase 0 audit tests pass |
 | 1 — Domain/data models | Create package, enums, Pydantic models, units, schemas, loaders, manifests, migrations | Phase 0 | Schema, uniqueness, references, round-trip | All seed records validate with no orphan source |
 | 2 — Inverter engine | Catalogue eligibility, fleet selection, circuit outputs, trace records | Phase 1; model-specific DC limits | Ratio, missing limits, override tests | SG350 receives no inferred kWp; results are typed and traced |
 | 3 — Protection/ampacity | Protection candidate interface, correction chain, strict 70 °C engine | Phases 1–2 | 129.10 A example, table boundaries, grouping | Each result cites table conditions and factor chain |
