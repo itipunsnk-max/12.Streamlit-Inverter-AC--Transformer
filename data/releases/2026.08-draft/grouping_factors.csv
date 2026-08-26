@@ -1,0 +1,22 @@
+record_id,schema_version,data_version,revision,installation_family,min_groups,max_groups,factor,counting_basis,conditions,verification_status,source_id,effective_from,effective_to,notes
+GRP-RACEWAY-01,1.0.0,2026.08-draft,1,SAME_RACEWAY,1,1,1.00,CIRCUIT_GROUP,No grouping derating for one group,ASSUMPTION,SRC-WIR-004,,,Conventional seed value pending owner approval
+GRP-RACEWAY-02,1.0.0,2026.08-draft,1,SAME_RACEWAY,2,2,0.80,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-03,1.0.0,2026.08-draft,1,SAME_RACEWAY,3,3,0.70,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-04,1.0.0,2026.08-draft,1,SAME_RACEWAY,4,4,0.65,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-05,1.0.0,2026.08-draft,1,SAME_RACEWAY,5,5,0.60,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-06,1.0.0,2026.08-draft,1,SAME_RACEWAY,6,6,0.57,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-07,1.0.0,2026.08-draft,1,SAME_RACEWAY,7,7,0.54,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-08,1.0.0,2026.08-draft,1,SAME_RACEWAY,8,8,0.52,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-09,1.0.0,2026.08-draft,1,SAME_RACEWAY,9,9,0.50,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-10-12,1.0.0,2026.08-draft,1,SAME_RACEWAY,10,12,0.45,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-13-16,1.0.0,2026.08-draft,1,SAME_RACEWAY,13,16,0.41,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-RACEWAY-17-20,1.0.0,2026.08-draft,1,SAME_RACEWAY,17,20,0.38,CIRCUIT_GROUP,Apply source notes and exceptions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-01,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,1,1,1.00,CIRCUIT_GROUP,No grouping derating for one group,ASSUMPTION,SRC-WIR-004,,,Conventional seed value pending owner approval
+GRP-SURFACE-02,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,2,2,0.85,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-03,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,3,3,0.79,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-04,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,4,4,0.75,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-05,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,5,5,0.73,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-06,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,6,6,0.72,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-07,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,7,7,0.72,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-08,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,8,8,0.71,CIRCUIT_GROUP,Apply source notes and spacing conditions,DRAFT,SRC-WIR-004,,,Selected table excerpt
+GRP-SURFACE-09-20,1.0.0,2026.08-draft,1,SURFACE_OR_WALL,9,20,0.70,CIRCUIT_GROUP,Upper range interpreted from then 0.70 wording,DRAFT,SRC-WIR-004,,,Owner must confirm exact table ranges

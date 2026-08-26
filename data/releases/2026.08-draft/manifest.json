@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "data_version": "2026.08-draft",
+  "release_status": "DRAFT",
+  "release_date": "2026-08-26",
+  "application_compatibility": ">=0.1,<0.2",
+  "allowed_verification_statuses": [
+    "VERIFIED",
+    "DRAFT",
+    "ASSUMPTION",
+    "MANUFACTURER_DATA",
+    "UTILITY_REQUIREMENT",
+    "REQUIRES_UTILITY_APPROVAL",
+    "USER_OVERRIDE",
+    "UNKNOWN",
+    "NOT_PERMITTED"
+  ],
+  "files": {
+    "ampacity.csv": {
+      "filename": "ampacity.csv",
+      "schema_version": "1.0.0",
+      "record_count": 7,
+      "sha256": "fbdd4e4fdcb904bfc1a9743bc78553d99f2f3474186894d37356de9da09a7214"
+    },
+    "boq_templates.csv": {
+      "filename": "boq_templates.csv",
+      "schema_version": "1.0.0",
+      "record_count": 2,
+      "sha256": "1e79ba0b15376a97a98f0d815f61094abdd10a2d18c4963d83763ba145170916"
+    },
+    "breakers.csv": {
+      "filename": "breakers.csv",
+      "schema_version": "1.0.0",
+      "record_count": 4,
+      "sha256": "853f5da2edfa6293d8874e4d95962646fa4e00346d285539f3a20d2ada093814"
+    },
+    "cables.csv": {
+      "filename": "cables.csv",
+      "schema_version": "1.0.0",
+      "record_count": 67,
+      "sha256": "e3620dcb9b26ac1eeac58b1b2b8c2033f031262dcfea55996f52b84a3fd169a4"
+    },
+    "conduits.csv": {
+      "filename": "conduits.csv",
+      "schema_version": "1.0.0",
+      "record_count": 10,
+      "sha256": "82c2f03c066ad1d93067af341f7179a4b472d41f5d5760057084339f334edd5c"
+    },
+    "design_rules.csv": {
+      "filename": "design_rules.csv",
+      "schema_version": "1.0.0",
+      "record_count": 6,
+      "sha256": "beb0cb6e33d9366739483bdff341180d9c6a5772b24ad15392bef5da375412b9"
+    },
+    "grouping_factors.csv": {
+      "filename": "grouping_factors.csv",
+      "schema_version": "1.0.0",
+      "record_count": 21,
+      "sha256": "b825cef4b910cc24f8ae0b30b8c9ea92d7e5448a2dbf2725a7ce1f2afa7177d7"
+    },
+    "inverters.csv": {
+      "filename": "inverters.csv",
+      "schema_version": "1.0.0",
+      "record_count": 6,
+      "sha256": "cac58f078de7757fd25294e08cc4f14189c0a36db2a69614d8f5a28f43c4f8e3"
+    },
+    "pe_mapping.csv": {
+      "filename": "pe_mapping.csv",
+      "schema_version": "1.0.0",
+      "record_count": 10,
+      "sha256": "80011ec19f2bd9267985531579ad79f5fae1664fd8a20c31eb51d326c6b43a4d"
+    },
+    "sources.csv": {
+      "filename": "sources.csv",
+      "schema_version": "1.0.0",
+      "record_count": 21,
+      "sha256": "132b3ea56514f06db4aab28a8418637524520e41a1f72bd8ef474776ef6c7bde"
+    },
+    "transformer_prices.csv": {
+      "filename": "transformer_prices.csv",
+      "schema_version": "1.0.0",
+      "record_count": 11,
+      "sha256": "17caf0fccdc01680dea19b1ac02e3e4dbbef5a1a2e0425e5eaffb3e206736b5a"
+    },
+    "transformers.csv": {
+      "filename": "transformers.csv",
+      "schema_version": "1.0.0",
+      "record_count": 17,
+      "sha256": "d28b293ae24a191efeb58287b61033e603d3512a006394f620ac65392c7f7f9f"
+    },
+    "unit_rates.csv": {
+      "filename": "unit_rates.csv",
+      "schema_version": "1.0.0",
+      "record_count": 13,
+      "sha256": "bb07ea13931e76ee6622b35d17b25abda5ccaae0f37af97bdae0abe4c660a1ab"
+    }
+  },
+  "source_inventory_count": 21,
+  "approver_state": "PENDING_ENGINEERING_OWNER",
+  "known_limitations": [
+    "Reference extracts are incomplete and not suitable for construction issue.",
+    "No engineering rule in this release is approved as VERIFIED.",
+    "Manifest does not hash itself; its containing release commit is the audit anchor."
+  ]
+}
