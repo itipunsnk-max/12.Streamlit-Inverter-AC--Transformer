@@ -24,6 +24,15 @@ def inverter_spec_from_record(record: InverterRecord) -> InverterSpec:
         model=record.model,
         ac_power_kw=record.ac_power_kw,
         ac_voltage_v=record.nominal_voltage_v,
+        dc_max_voltage_v=record.dc_max_voltage_v,
+        startup_voltage_v=record.startup_voltage_v,
+        mppt_min_voltage_v=record.mppt_min_voltage_v,
+        mppt_max_voltage_v=record.mppt_max_voltage_v,
+        max_short_circuit_current_per_mppt_a=(
+            record.max_short_circuit_current_per_mppt_a
+        ),
+        inputs_per_mppt=record.inputs_per_mppt,
+        ac_connection=record.ac_connection,
         phases=record.phases,
         ac_apparent_power_kva=record.ac_apparent_power_kva,
         nominal_current_a=record.nominal_ac_current_a,
@@ -34,7 +43,7 @@ def inverter_spec_from_record(record: InverterRecord) -> InverterSpec:
         maximum_dc_input_current_a=record.max_dc_input_current_a,
         ambient_reference_c=record.ambient_reference_c,
         mppt_count=record.mppt_count,
-        maximum_input_current_per_mppt_a=None,
+        maximum_input_current_per_mppt_a=record.max_input_current_per_mppt_a,
     )
 
 

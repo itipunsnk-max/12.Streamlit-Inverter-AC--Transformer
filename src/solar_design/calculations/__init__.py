@@ -37,6 +37,7 @@ from .transformer import (
 from .wiring import (
     allocate_cable_conduits,
     allocate_conduits,
+    allocate_parallel_circuit_conduits,
     ampacity_record_for_cable,
     ampacity_records_for_cables,
     ampacity_records_from_snapshot,
@@ -57,6 +58,7 @@ from .wiring import (
 __all__ = [
     "allocate_conduits",
     "allocate_cable_conduits",
+    "allocate_parallel_circuit_conduits",
     "ampacity_record_for_cable",
     "ampacity_records_for_cables",
     "ampacity_records_from_snapshot",

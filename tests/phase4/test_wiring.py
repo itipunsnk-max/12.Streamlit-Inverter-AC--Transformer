@@ -11,6 +11,7 @@ import pytest
 from solar_design.calculations.wiring import (
     allocate_cable_conduits,
     allocate_conduits,
+    allocate_parallel_circuit_conduits,
     ampacity_records_from_snapshot,
     cable_specs_from_snapshot,
     conduit_specs_from_snapshot,
@@ -173,6 +174,28 @@ def test_parallel_allocation_assigns_whole_cables_and_applies_count_specific_fil
         and all(isinstance(index, int) for index in run.cable_indices)
         for run in result.runs
     )
+
+
+def test_parallel_circuit_allocation_keeps_each_full_3npe_set_in_one_conduit() -> None:
+    phase = _cable("CAB-PHASE-35", "35", "13")
+    pe = _cable("CAB-PE-25", "25", "9.7")
+
+    result = allocate_parallel_circuit_conduits(
+        phase,
+        pe,
+        (_conduit("54"),),
+        phase_conductors_per_run=3,
+        neutral_conductors_per_run=1,
+        parallel_runs=2,
+    )
+
+    assert result.status is AssessmentStatus.PASS
+    assert len(result.runs) == 2
+    assert all(run.cable_count == 5 for run in result.runs)
+    assert all(run.permitted_fill_percent == Decimal("40") for run in result.runs)
+    assert result.runs[0].cable_indices == (0, 1, 2, 3, 4)
+    assert result.runs[1].cable_indices == (5, 6, 7, 8, 9)
+    assert all(run.actual_fill_percent <= Decimal("40") for run in result.runs)
 
 
 def test_cable_selection_uses_ampacity_link_and_keeps_parallel_count_explicit() -> None:

@@ -25,7 +25,7 @@ from solar_design.calculations.transformer import (
     standard_transformer_ratings_from_snapshot,
 )
 from solar_design.calculations.wiring import (
-    allocate_cable_conduits,
+    allocate_parallel_circuit_conduits,
     ampacity_records_from_snapshot,
     cable_specs_from_snapshot,
     conduit_specs_from_snapshot,
@@ -33,12 +33,17 @@ from solar_design.calculations.wiring import (
     select_cables_and_pe,
 )
 from solar_design.costing import CostRevision, RateRecord, RateSnapshot, calculate_cost
-from solar_design.domain import PhaseConfiguration, TransformerDuty
+from solar_design.domain import (
+    EngineeringValidationError,
+    PhaseConfiguration,
+    TransformerDuty,
+)
 from solar_design.models import (
     AmpacityAssessment,
     CircuitRequirement,
     ConduitAllocation,
     InverterSelection,
+    InverterSpec,
     ProtectionSelection,
     ReferenceSnapshot,
     TransformerSelection,
@@ -82,6 +87,101 @@ class WorkflowResults:
     cost: CostRevision | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class CircuitWiringResults:
+    """Engineering results for one selected inverter AC circuit."""
+
+    protection: ProtectionSelection
+    ampacity: AmpacityAssessment
+    wiring: WiringSelection
+    conduit: ConduitAllocation
+
+
+def assess_inverter_ac_circuit(
+    design_current_a: Decimal,
+    inverter: InverterSpec,
+    snapshot: ReferenceSnapshot,
+) -> CircuitWiringResults:
+    """Assess a 70 C AC feeder, exact PE, and one complete set per conduit.
+
+    This application service is shared by the full workflow and the external
+    inverter-reference view.  Presentation modules receive results only; they
+    do not reproduce engineering rules or catalogue lookups.
+    """
+
+    protection = select_protection(design_current_a)
+    required_ampacity = strict_70c_required_ampacity(design_current_a)
+    all_cables = cable_specs_from_snapshot(snapshot)
+    phase_cables = tuple(item for item in all_cables if item.system == "AC")
+    linked_ampacity = ampacity_records_from_snapshot(snapshot, phase_cables)
+    wiring = select_cables_and_pe(
+        required_ampacity,
+        phase_cables,
+        linked_ampacity,
+        pe_selection_rules_from_snapshot(snapshot),
+        installation_method="UNSPECIFIED",
+        current_carrying_conductors=3,
+        max_parallel_runs=3,
+    )
+    if wiring.cable.cable_id is None or wiring.cable.ampacity_per_run_a is None:
+        raise EngineeringValidationError(
+            "cable_selection",
+            "No eligible 70 C phase-cable selection is available for this inverter",
+        )
+
+    selected_cable = next(
+        item for item in phase_cables if item.record_id == wiring.cable.cable_id
+    )
+    ampacity = check_70c_ampacity(
+        design_current_a,
+        wiring.cable.ampacity_per_run_a,
+        cable_cross_section_mm2=selected_cable.cross_section_mm2,
+    )
+
+    pe_cable = None
+    if wiring.protective_earth.pe_cross_section_mm2 is not None:
+        pe_matches = tuple(
+            item
+            for item in all_cables
+            if item.system == "GROUND"
+            and item.cross_section_mm2
+            == wiring.protective_earth.pe_cross_section_mm2
+        )
+        if len(pe_matches) > 1:
+            raise EngineeringValidationError(
+                "pe_cable_selection",
+                "Multiple PE cable records match the exact selected CSA",
+            )
+        pe_cable = pe_matches[0] if pe_matches else None
+
+    if inverter.phases is None:
+        raise EngineeringValidationError(
+            "inverter.phases",
+            "Inverter phase configuration is required for conduit allocation",
+        )
+    if inverter.ac_connection not in {"3-N-PE", "3-PE"}:
+        raise EngineeringValidationError(
+            "inverter.ac_connection",
+            "Supported AC connection must be exactly 3-N-PE or 3-PE",
+        )
+    phase_conductors = 3 if inverter.phases is PhaseConfiguration.THREE_PHASE else 1
+    neutral_conductors = 1 if inverter.ac_connection == "3-N-PE" else 0
+    conduit = allocate_parallel_circuit_conduits(
+        selected_cable,
+        pe_cable,
+        conduit_specs_from_snapshot(snapshot),
+        phase_conductors_per_run=phase_conductors,
+        neutral_conductors_per_run=neutral_conductors,
+        parallel_runs=wiring.cable.parallel_runs,
+    )
+    return CircuitWiringResults(
+        protection=protection,
+        ampacity=ampacity,
+        wiring=wiring,
+        conduit=conduit,
+    )
+
+
 def load_reference_snapshot(
     release_dir: str | Path,
 ) -> tuple[ReferenceSnapshot, tuple[tuple[str, str], ...]]:
@@ -119,37 +219,23 @@ def run_design_workflow(
         None,
     )
 
-    protection = select_protection(current) if current is not None else None
+    protection = None
     ampacity = None
     wiring = None
     conduit = None
     if current is not None:
-        required_ampacity = strict_70c_required_ampacity(current)
-        cable_catalogue = cable_specs_from_snapshot(snapshot)
-        linked_ampacity = ampacity_records_from_snapshot(snapshot, cable_catalogue)
-        wiring = select_cables_and_pe(
-            required_ampacity,
-            cable_catalogue,
-            linked_ampacity,
-            pe_selection_rules_from_snapshot(snapshot),
-            installation_method="UNSPECIFIED",
-            current_carrying_conductors=3,
-            max_parallel_runs=3,
+        selected_inverter = next(
+            item for item in inverter_catalogue if item.record_id == inverter.selected_model_id
         )
-        if wiring.cable.cable_id is not None and wiring.cable.ampacity_per_run_a is not None:
-            selected_cable = next(
-                item for item in cable_catalogue if item.record_id == wiring.cable.cable_id
-            )
-            ampacity = check_70c_ampacity(
-                current,
-                wiring.cable.ampacity_per_run_a,
-                cable_cross_section_mm2=selected_cable.cross_section_mm2,
-            )
-            conduit = allocate_cable_conduits(
-                tuple(selected_cable for _ in range(wiring.cable.parallel_runs)),
-                conduit_specs_from_snapshot(snapshot),
-                max_conduits=wiring.cable.parallel_runs,
-            )
+        circuit_results = assess_inverter_ac_circuit(
+            current,
+            selected_inverter,
+            snapshot,
+        )
+        protection = circuit_results.protection
+        ampacity = circuit_results.ampacity
+        wiring = circuit_results.wiring
+        conduit = circuit_results.conduit
 
     required_transformer = required_transformer_kva_from_load(
         inputs.load_kw,

@@ -35,6 +35,7 @@ from solar_design.models import (
     migrate_payload,
 )
 from solar_design.repositories import DataReleaseError, ReleaseRepository
+from solar_design.repositories.release import _canonical_release_bytes
 
 ROOT = Path(__file__).resolve().parents[2]
 RELEASE = ROOT / "data" / "releases" / "2026.08-draft"
@@ -54,6 +55,13 @@ def test_current_release_loads_all_declared_datasets_into_an_immutable_snapshot(
 
     with pytest.raises(ValidationError):
         snapshot.data_version = "changed"
+
+
+def test_release_hash_validation_is_stable_across_windows_crlf_checkout() -> None:
+    lf_payload = b"record_id,value\nROW-1,Thai text\n"
+    crlf_payload = lf_payload.replace(b"\n", b"\r\n")
+
+    assert _canonical_release_bytes(crlf_payload) == lf_payload
 
 
 def test_manifest_and_unit_models_round_trip_through_json() -> None:

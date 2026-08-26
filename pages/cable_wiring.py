@@ -59,6 +59,25 @@ else:
             f"Conduit | ท่อ: **{conduit.conduit_id or 'MISSING | ไม่พบข้อมูล'}**"
         )
         st.write(f"Runs allocated | จำนวนชุดที่จัดสรร: **{len(conduit.runs)}**")
+        if conduit.runs:
+            st.caption(
+                "Each row is one complete parallel circuit set; conductors are not split "
+                "between conduits. / แต่ละแถวคือสายครบหนึ่งชุดขนานและไม่แยกสายข้ามท่อ"
+            )
+            st.dataframe(
+                [
+                    {
+                        "set | ชุด": index,
+                        "conduit | ท่อ": run.conduit_id,
+                        "cable_count | จำนวนสาย": run.cable_count,
+                        "actual_fill_% | พื้นที่ใช้": run.actual_fill_percent,
+                        "fill_limit_% | เกณฑ์": run.permitted_fill_percent,
+                    }
+                    for index, run in enumerate(conduit.runs, start=1)
+                ],
+                width="stretch",
+                hide_index=True,
+            )
         render_findings(
             conduit.findings,
             title="Conduit findings | รายการทบทวนท่อร้อยสาย",

@@ -31,8 +31,15 @@ def _source_rows() -> list[dict[str, str]]:
         return list(csv.DictReader(source_file))
 
 
-def _digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def _digest(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _source_bytes(path: Path, *, repository_metadata: bool) -> bytes:
+    payload = path.read_bytes()
+    if repository_metadata:
+        return payload.replace(b"\r\n", b"\n")
+    return payload
 
 
 def _normalise_archive_path(value: str) -> str:
@@ -45,24 +52,29 @@ def test_required_phase0_documents_exist_and_are_not_empty() -> None:
         assert document.stat().st_size > 0, f"empty Phase 0 document: {document.relative_to(ROOT)}"
 
 
-def test_source_registry_covers_and_hashes_the_21_file_audit_baseline() -> None:
+def test_source_registry_covers_the_baseline_and_supplemental_manufacturer_evidence() -> None:
     rows = _source_rows()
 
-    assert len(rows) == 21
-    assert len({row["source_id"] for row in rows}) == 21
-    assert len({row["relative_path"] for row in rows}) == 21
+    assert len(rows) == 22
+    assert len({row["source_id"] for row in rows}) == 22
+    assert len({row["relative_path"] for row in rows}) == 22
     assert sum(row["source_id"].startswith(ENGINEERING_PREFIXES) for row in rows) == 18
     assert {row["source_id"] for row in rows if row["source_id"].startswith("SRC-REPO-")} == {
         "SRC-REPO-001",
         "SRC-REPO-002",
         "SRC-REPO-003",
     }
+    assert any(row["source_id"] == "SRC-MFR-001" for row in rows)
 
     for row in rows:
         source_path = ROOT / row["relative_path"]
         assert source_path.is_file(), f"missing source: {row['relative_path']}"
-        assert source_path.stat().st_size == int(row["byte_size"]), row["source_id"]
-        assert _digest(source_path) == row["sha256"], row["source_id"]
+        payload = _source_bytes(
+            source_path,
+            repository_metadata=row["authority"] == "REPOSITORY_METADATA",
+        )
+        assert len(payload) == int(row["byte_size"]), row["source_id"]
+        assert _digest(payload) == row["sha256"], row["source_id"]
         assert row["verification_status"] != "VERIFIED"
 
 

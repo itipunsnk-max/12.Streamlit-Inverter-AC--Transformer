@@ -4,9 +4,9 @@
 
 | Field | Value |
 |---|---|
-| Repository branch | `implementation-v1` |
-| Last committed checkpoint | `1e689db checkpoint-handoff-phase0-3` |
-| Current worktree | Contains the Phase 4–11 implementation and tests from this handoff; pre-existing `desktop.ini` remains untracked |
+| Repository branch | `main` tracking `origin/main` |
+| Last committed checkpoint | `509e9f3 merge:sync-origin-main-preserve-release-tree` |
+| Current worktree | Contains the post-release workflow/inverter/wiring/transformer reference repair; pre-existing `desktop.ini` remains untracked |
 | Completed scope | Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6, Phase 7, Phase 8, Phase 9, Phase 10, and Phase 11 |
 | Current data release | `2026.08-draft` / `DRAFT` |
 
@@ -24,6 +24,17 @@
 - Phase 9: `DONE` — canonical immutable project package JSON with schema/data versions, reference hashes, warnings, overrides, and reconciliation; UTF-8 BOM CSV export/import for BOQ, cost, and reference datasets; and an exactly eight-sheet Excel export with reconciliation formulas and Thai-text support. Phase 9 has six export/round-trip tests.
 - Phase 10: `DONE` — full workflow golden integration, Hypothesis property invariants, release data-contract closure, CSV formula-safety, packaging contract, Linux-compatible smoke coverage, CI quality gates, wheel-build job, and dependency/static security jobs. Phase 10 has six verification/smoke tests.
 - Phase 11: `DONE` — bilingual UX, accessibility-oriented labels/help, disclaimer, README, deployment guide, Community Cloud procedure, AppTest contracts, live desktop/tablet smoke evidence, restricted-access and rollback procedures, and release checklist.
+
+## Post-release workflow and catalogue repair — 2026-08-27
+
+- Root causes for the non-working Run action were confirmed as Windows CRLF hash drift in the pinned release, missing inverter AC voltage/phase/current fields, and direct page URLs that assumed `app.py` had already initialized session state.
+- Release hash verification now canonicalizes CSV/manifest line endings; `.gitattributes` pins release text files to LF, and a cross-platform regression covers CRLF payloads.
+- The six Sungrow rows now retain manufacturer DC/MPPT fields plus rated AC power, voltage, AC connection, and maximum output current. `SG350HX-20` is `320 kW` rated at the documented 40 °C / 800 V condition, while `352 kVA` is retained as its 30 °C maximum apparent output. No missing maximum DC kWp or DC/AC ratio was inferred.
+- AC main cable selection is restricted to `system=AC`; PE cable resolution is restricted to `system=GROUND` and exact CSA. A conduit run now contains the complete phase/neutral/PE set for one parallel feeder, and repeated catalogue cable IDs are allowed as distinct physical conductors.
+- `pages/inverter_selection.py` exposes a read-only, no-project-Run reference for `Inverter → main cable → PE → conduit`. Missing exact PE data remains `MISSING/REVIEW`, so SG36/40/50 can be compared without presenting an unsafe conduit recommendation.
+- `pages/transformer_installation.py` includes conceptual single-line and yard-reference SVGs plus the selected installation-band details. These remain explanatory illustrations, not construction drawings or PEA rules.
+- Direct/deep-linked pages lazily initialize the same pinned release as `app.py`; AppTest covers direct Cable page execution and the Run button.
+- Official manufacturer evidence and extracted field boundaries are recorded in `docs/sources/MANUFACTURER_REFERENCE_REGISTER.md` as `SRC-MFR-001`; external PDFs are linked, not redistributed.
 
 ## Phase 4 implementation record
 
@@ -162,7 +173,7 @@ Changed or added:
 - `src/solar_design/calculations/__init__.py`
 - `tests/phase2/test_inverter_engine.py`
 
-The `1.40` DC/AC ratio remains a per-record catalogue value. The engine never applies it globally. `SG350HX-20` is explicitly catalogued at `350 kW` AC (`352 kVA`), while it remains without a sourced maximum DC kWp and without a sourced ratio; normal DC-capacity selection rejects it, while an explicit owner override is retained as `USER_OVERRIDE` with a warning and no invented capacity. AC current uses a manufacturer maximum when available, otherwise a transparent fallback formula only when voltage and phase inputs exist.
+The `1.40` DC/AC ratio remains a per-record catalogue value. The engine never applies it globally. `SG350HX-20` is explicitly catalogued at `320 kW` rated AC at 40 °C / 800 V and `352 kVA` maximum apparent output at 30 °C, while it remains without a sourced maximum DC kWp and without a sourced ratio; normal DC-capacity selection rejects it, while an explicit owner override is retained as `USER_OVERRIDE` with a warning and no invented capacity. AC current uses a manufacturer maximum when available, otherwise a transparent fallback formula only when voltage and phase inputs exist.
 
 ## Phase 3 implementation record
 
@@ -182,6 +193,10 @@ The strict 70 °C formula returns `129.10 A` when rounded to two decimals for 10
 
 ## Verification
 
+- Post-release repair full suite: `python -m pytest -p no:cacheprovider -q` — `92 passed`.
+- Post-release repair coverage: `92 passed`, total coverage `86.01%` (`--cov-fail-under=75`).
+- Post-release repair quality gates: full Ruff, Mypy for 77 files, compileall, and `pip check` — passed.
+- Live local browser smoke: Dashboard Run reached CURRENT for all stages and READY cost; direct Cable-page Run rendered cable/PE/conduit results; independent SG125CX-P2 reference rendered `Main 35 mm² × 2 sets → PE 25 mm² → IMC 2 × 2 conduits`, five conductors per conduit, 25.36% fill against 40%; transformer reference SVG rendered. No Streamlit app exception was observed.
 - `python -m pytest -p no:cacheprovider -q` — `27 passed`
 - `python -m ruff check src/solar_design/models src/solar_design/calculations/inverter tests/phase2` — passed
 - `python -m mypy src/solar_design/models src/solar_design/calculations/inverter tests/phase2` — passed
@@ -238,8 +253,8 @@ The strict 70 °C formula returns `129.10 A` when rounded to two decimals for 10
 - Ampacity table rows and grouping factors remain `DRAFT` or `ASSUMPTION`; a mathematical PASS is not construction approval.
 - Local `pip-audit`/Bandit executables were not installed in this Windows environment; the CSV formula-safety test passed and CI now installs/runs both tools in the security job.
 - Local wheel build was attempted but blocked by the managed Windows environment's pip temporary build-tracker permission (`WinError 5`); the Ubuntu package job performs the build and wheel-install smoke check.
-- The current data release does not source nominal AC voltage, phase configuration, or maximum AC current for the inverter rows; therefore AC current can remain unassessed from the release snapshot and must not be guessed.
-- The current cable release contains broken PV OD references and incomplete AC cable material/insulation/temperature fields; the implementation returns missing/review or requires explicit caller filters rather than guessing.
+- The inverter release now sources nominal AC voltage, phase configuration, AC connection, and maximum AC current from Sungrow manufacturer datasheets. Maximum DC kWp and DC/AC ratio for `SG350HX-20` remain absent and are not inferred.
+- The cable release still contains broken PV OD references. AC CV-FD metadata is identified as Cu/XLPE/0.6/1 kV/90 °C and Ground THW as Cu/PVC/450/750 V/70 °C from Phelps Dodge; current CV-FD OD and ampacity rows remain workbook/Draft evidence and require owner confirmation.
 - PE mappings are still Draft and exact-only; absent sizes remain `MISSING`/`REVIEW` and are not an adiabatic or arithmetic fallback.
 - Conduit dimensions are screening-only until certified internal diameters are supplied; a mathematical fill pass is not construction approval.
 - Transformer product rows remain generic Draft rating options; HV/LV/product details must be supplied before product-level current or installation approval.
@@ -250,4 +265,4 @@ The strict 70 °C formula returns `129.10 A` when rounded to two decimals for 10
 - Phase 11 is complete for local UX/accessibility smoke and release documentation. A live Community Cloud restricted-access and rollback rehearsal remains an owner-operated deployment step because this workspace has no deployed URL or authorized test identities.
 - Streamlit AppTest cleanup on this managed Windows environment may emit a post-success temporary-folder `PermissionError` traceback; the test process still exits 0 and no app exception is reported.
 
-Before committing, stage only the approved Phase 4 through Phase 11 files and the existing Phase 1 through Phase 3 implementation files that belong to this worktree. Preserve pre-existing `desktop.ini`, and review any unrelated files before staging.
+Before committing, stage only the approved post-release repair files. Preserve pre-existing `desktop.ini`, ignore managed-test temporary directories, and review any unrelated files before staging.

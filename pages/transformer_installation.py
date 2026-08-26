@@ -1,5 +1,7 @@
 """Transformer sizing and installation assessment page."""
 
+from pathlib import Path
+
 import streamlit as st
 
 from solar_design.ui.rendering import (
@@ -11,6 +13,7 @@ from solar_design.ui.rendering import (
 from solar_design.ui.runtime import get_workspace_state, run_workflow
 
 state = get_workspace_state()
+ROOT = Path(__file__).resolve().parents[1]
 render_page_header(
     "Transformer & Installation",
     "Review standard rating, HV/LV current, duty basis, and explicit installation assessment.",
@@ -52,6 +55,27 @@ else:
             "Installation rule | เกณฑ์การติดตั้ง: "
             f"**{assessment.rule_id or 'NOT ASSESSED'}**"
         )
+        dimensions = st.columns(4)
+        dimensions[0].metric(
+            "Pad (m) | ฐานหม้อแปลง",
+            " × ".join(str(item) for item in assessment.pad_dimensions_m)
+            if assessment.pad_dimensions_m
+            else "NOT ASSESSED",
+        )
+        dimensions[1].metric(
+            "Yard (m) | ลานหม้อแปลง",
+            " × ".join(str(item) for item in assessment.yard_dimensions_m)
+            if assessment.yard_dimensions_m
+            else "NOT ASSESSED",
+        )
+        dimensions[2].metric(
+            "Earth conductor (m) | สายดิน",
+            assessment.earth_conductor_length_m or "NOT ASSESSED",
+        )
+        dimensions[3].metric(
+            "Earth rods | หลักดิน",
+            assessment.earth_rod_count or "NOT ASSESSED",
+        )
         render_findings(
             assessment.findings,
             title="Installation findings | รายการทบทวนการติดตั้ง",
@@ -67,6 +91,26 @@ else:
         )
         for scope, reason in state.override_reasons:
             st.write(f"{scope}: {reason}")
+
+st.subheader("Transformer reference | ภาพอ้างอิงหม้อแปลง")
+st.caption(
+    "Concept illustrations clarify the equipment chain and yard zones; they are not "
+    "construction drawings or utility approval. / ภาพนี้ใช้ช่วยทำความเข้าใจเท่านั้น "
+    "ไม่ใช่แบบก่อสร้างหรือการอนุมัติจากการไฟฟ้า"
+)
+reference_tabs = st.tabs(
+    ["Connection chain | ลำดับการเชื่อมต่อ", "Yard concept | แนวคิดลานหม้อแปลง"]
+)
+with reference_tabs[0]:
+    st.image(
+        str(ROOT / "assets" / "transformer_single_line_reference.svg"),
+        width="stretch",
+    )
+with reference_tabs[1]:
+    st.image(
+        str(ROOT / "assets" / "transformer_yard_reference.svg"),
+        width="stretch",
+    )
 
 if st.button(
     "Run design workflow | ประมวลผลการออกแบบ",

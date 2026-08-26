@@ -17,6 +17,7 @@ from .catalogue import (
 from .engine import (
     allocate_cable_conduits,
     allocate_conduits,
+    allocate_parallel_circuit_conduits,
     select_cable,
     select_cables_and_pe,
     select_pe_conductor,
@@ -25,6 +26,7 @@ from .engine import (
 __all__ = [
     "allocate_cable_conduits",
     "allocate_conduits",
+    "allocate_parallel_circuit_conduits",
     "ampacity_record_for_cable",
     "ampacity_records_for_cables",
     "ampacity_records_from_snapshot",

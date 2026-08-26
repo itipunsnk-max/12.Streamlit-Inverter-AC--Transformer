@@ -1,0 +1,4 @@
+# Keep versioned reference data byte-stable across Windows and Linux checkouts.
+data/releases/**/*.csv text eol=lf
+data/releases/**/manifest.json text eol=lf
+docs/sources/*.md text eol=lf

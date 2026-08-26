@@ -128,6 +128,13 @@ class SourceRecord(BaseModel):
 class InverterRecord(ReferenceRecord):
     manufacturer: str = Field(min_length=1)
     model: str = Field(min_length=1)
+    dc_max_voltage_v: Decimal | None = Field(default=None, gt=0)
+    startup_voltage_v: Decimal | None = Field(default=None, gt=0)
+    mppt_min_voltage_v: Decimal | None = Field(default=None, gt=0)
+    mppt_max_voltage_v: Decimal | None = Field(default=None, gt=0)
+    max_input_current_per_mppt_a: Decimal | None = Field(default=None, gt=0)
+    max_short_circuit_current_per_mppt_a: Decimal | None = Field(default=None, gt=0)
+    inputs_per_mppt: PositiveInt | None = None
     ac_power_kw: Decimal = Field(gt=0)
     ac_apparent_power_kva: Decimal | None = Field(default=None, gt=0)
     nominal_voltage_v: Decimal | None = Field(default=None, gt=0)
@@ -140,6 +147,7 @@ class InverterRecord(ReferenceRecord):
     dc_ac_ratio: Decimal | None = Field(default=None, gt=0)
     mppt_count: PositiveInt | None = None
     max_dc_input_current_a: Decimal | None = Field(default=None, gt=0)
+    ac_connection: str | None = None
     input_current_basis: str | None = None
     ambient_reference_c: Decimal | None = None
     derating_profile: str | None = None

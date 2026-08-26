@@ -146,20 +146,58 @@ def test_override_requires_reason_and_can_explicitly_select_unknown_dc_limit() -
     assert any(item.code == "INVERTER_DC_CAPACITY_UNKNOWN" for item in result.findings)
 
 
-def test_reference_catalogue_adapter_preserves_sg350_unknown_limits() -> None:
+@pytest.mark.parametrize(
+    ("record_id", "rated_kw", "voltage_v", "maximum_current_a", "mppt_count"),
+    (
+        ("INV-SUNGROW-SG36CX-P2", "36", "400", "60.2", 4),
+        ("INV-SUNGROW-SG40CX-P2", "40", "400", "66.9", 4),
+        ("INV-SUNGROW-SG50CX-P2", "50", "400", "83.6", 4),
+        ("INV-SUNGROW-SG125CX-P2", "125", "400", "181.1", 12),
+        ("INV-SUNGROW-SG150CX", "150", "400", "240.6", 7),
+        ("INV-SUNGROW-SG350HX-20", "320", "800", "254", 6),
+    ),
+)
+def test_reference_catalogue_preserves_official_sungrow_ac_fields(
+    record_id: str,
+    rated_kw: str,
+    voltage_v: str,
+    maximum_current_a: str,
+    mppt_count: int,
+) -> None:
+    snapshot = ReleaseRepository(RELEASE).load_snapshot()
+    catalogue = inverter_specs_from_snapshot(snapshot)
+
+    inverter = next(item for item in catalogue if item.record_id == record_id)
+
+    assert inverter.ac_power_kw == Decimal(rated_kw)
+    assert inverter.ac_voltage_v == Decimal(voltage_v)
+    assert inverter.maximum_output_current_a == Decimal(maximum_current_a)
+    assert inverter.mppt_count == mppt_count
+    assert inverter.phases is PhaseConfiguration.THREE_PHASE
+
+
+def test_reference_catalogue_adapter_uses_official_sg350_rated_conditions() -> None:
     snapshot = ReleaseRepository(RELEASE).load_snapshot()
 
     catalogue = inverter_specs_from_snapshot(snapshot)
     sg350 = next(item for item in catalogue if item.record_id == "INV-SUNGROW-SG350HX-20")
 
-    assert sg350.ac_power_kw == Decimal("350")
+    assert sg350.ac_power_kw == Decimal("320")
     assert sg350.ac_apparent_power_kva == Decimal("352")
     assert sg350.maximum_dc_power_kwp is None
     assert sg350.dc_ac_ratio is None
-    assert sg350.ac_voltage_v is None
-    assert sg350.phases is None
+    assert sg350.ac_voltage_v == Decimal("800")
+    assert sg350.phases is PhaseConfiguration.THREE_PHASE
+    assert sg350.maximum_output_current_a == Decimal("254")
     assert sg350.maximum_dc_input_current_a == Decimal("450")
-    assert sg350.maximum_input_current_per_mppt_a is None
+    assert sg350.maximum_input_current_per_mppt_a == Decimal("75")
+    assert sg350.max_short_circuit_current_per_mppt_a == Decimal("125")
+    assert sg350.dc_max_voltage_v == Decimal("1500")
+    assert sg350.startup_voltage_v == Decimal("550")
+    assert sg350.mppt_min_voltage_v == Decimal("500")
+    assert sg350.mppt_max_voltage_v == Decimal("1500")
+    assert sg350.inputs_per_mppt == 5
+    assert sg350.ac_connection == "3-PE"
 
 
 def test_ac_current_prefers_manufacturer_maximum_and_records_trace() -> None:

@@ -38,7 +38,7 @@
       "filename": "cables.csv",
       "schema_version": "1.0.0",
       "record_count": 67,
-      "sha256": "e3620dcb9b26ac1eeac58b1b2b8c2033f031262dcfea55996f52b84a3fd169a4"
+      "sha256": "0bec6005f70e6b4a20b99746705931b39004bdace071717e5f664a4a304aecf0"
     },
     "conduits.csv": {
       "filename": "conduits.csv",
@@ -62,7 +62,7 @@
       "filename": "inverters.csv",
       "schema_version": "1.0.0",
       "record_count": 6,
-      "sha256": "cac58f078de7757fd25294e08cc4f14189c0a36db2a69614d8f5a28f43c4f8e3"
+      "sha256": "9e853da8c08b99a50b7ab95bba658c8d9a9b3b0282fbb046e52d7f45ba609e2c"
     },
     "pe_mapping.csv": {
       "filename": "pe_mapping.csv",
@@ -73,8 +73,8 @@
     "sources.csv": {
       "filename": "sources.csv",
       "schema_version": "1.0.0",
-      "record_count": 21,
-      "sha256": "132b3ea56514f06db4aab28a8418637524520e41a1f72bd8ef474776ef6c7bde"
+      "record_count": 22,
+      "sha256": "6552acf74d67a72bc2c502462f5c6e466533f8b0bd6c1414f1e65734cd8418f2"
     },
     "transformer_prices.csv": {
       "filename": "transformer_prices.csv",
@@ -95,7 +95,7 @@
       "sha256": "bb07ea13931e76ee6622b35d17b25abda5ccaae0f37af97bdae0abe4c660a1ab"
     }
   },
-  "source_inventory_count": 21,
+  "source_inventory_count": 22,
   "approver_state": "PENDING_ENGINEERING_OWNER",
   "known_limitations": [
     "Reference extracts are incomplete and not suitable for construction issue.",

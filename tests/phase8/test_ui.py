@@ -7,6 +7,8 @@ from pathlib import Path
 from streamlit.testing.v1 import AppTest
 
 from solar_design.costing import CostScenario
+from solar_design.domain import AssessmentStatus
+from solar_design.services.reference_views import inverter_wiring_references
 from solar_design.ui.state import WORKFLOW_STAGES, WorkspaceCoordinator
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,10 +28,33 @@ def test_workspace_coordinator_runs_from_inputs_to_cost_summary() -> None:
     assert state.validation_errors == ()
     assert state.stale_stages == frozenset()
     assert state.results.inverter is not None
+    assert state.results.wiring is not None
+    assert state.results.conduit is not None
     assert state.results.transformer is not None
     assert state.results.boq is not None
     assert state.results.cost is not None
     assert state.results.cost.total_for(CostScenario.BASE).grand_total >= 0
+
+
+def test_independent_inverter_reference_exposes_safe_70c_feeder_chain() -> None:
+    state = WorkspaceCoordinator(RELEASE).initial_state()
+    assert state.reference_snapshot is not None
+
+    rows = inverter_wiring_references(state.reference_snapshot)
+    sg36 = next(item for item in rows if item.model == "SG36CX-P2")
+    sg125 = next(item for item in rows if item.model == "SG125CX-P2")
+
+    assert len(rows) == 6
+    assert sg36.status is AssessmentStatus.MISSING
+    assert sg36.pe_cable_csa_mm2 is None
+    assert sg36.conduit_id is None
+    assert sg125.status is AssessmentStatus.PASS
+    assert sg125.main_cable_csa_mm2 == 35
+    assert sg125.parallel_runs == 2
+    assert sg125.pe_cable_csa_mm2 == 25
+    assert sg125.conduit_count == 2
+    assert sg125.conductors_per_conduit == 5
+    assert sg125.permitted_fill_percent == 40
 
 
 def test_saving_changed_inputs_marks_downstream_results_stale_and_keeps_override_reason() -> None:
@@ -127,6 +152,22 @@ def test_streamlit_all_phase8_pages_render_without_exceptions() -> None:
     for page_path in page_paths:
         app.switch_page(page_path).run()
         assert not app.exception, page_path
+
+
+def test_deep_linked_cable_page_initializes_workspace_and_runs() -> None:
+    app = AppTest.from_file(
+        str(ROOT / "pages" / "cable_wiring.py"),
+        default_timeout=20,
+    ).run()
+
+    assert not app.exception
+    next(
+        item
+        for item in app.button
+        if item.label == "Run design workflow | ประมวลผลการออกแบบ"
+    ).click().run()
+    assert not app.exception
+    assert any("Cable / PE / Conduit" in item.value for item in app.title)
 
 
 def test_streamlit_project_input_change_exposes_stale_and_override_validation() -> None:

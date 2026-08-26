@@ -48,6 +48,7 @@ def cable_spec_from_record(record: CableDataRecord) -> CableSpec:
         cross_section_mm2=record.csa_mm2,
         outside_diameter_mm=record.outside_diameter_mm,
         temperature_rating_c=record.conductor_temp_c,
+        system=record.system,
     )
 
 

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Transformer yard installation reference</title>
+  <desc id="desc">Conceptual transformer yard showing enclosure, clear zone, transformer pad, high-voltage zone, low-voltage zone, and earthing ring.</desc>
+  <rect width="1200" height="560" fill="#f7f9fc"/>
+  <text x="55" y="52" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#0b1f3a">Transformer yard — conceptual plan view</text>
+  <text x="55" y="84" font-family="Arial, sans-serif" font-size="17" fill="#526174">Dimensions shown by the app come only from the selected installation-rule band</text>
+  <rect x="90" y="120" width="1020" height="360" rx="12" fill="#fff" stroke="#475569" stroke-width="7" stroke-dasharray="18 12"/>
+  <rect x="315" y="200" width="570" height="210" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="5"/>
+  <rect x="455" y="235" width="290" height="140" rx="8" fill="#d1fae5" stroke="#047857" stroke-width="4"/>
+  <circle cx="555" cy="305" r="45" fill="none" stroke="#047857" stroke-width="5"/>
+  <circle cx="645" cy="305" r="45" fill="none" stroke="#047857" stroke-width="5"/>
+  <text x="600" y="435" font-family="Arial, sans-serif" font-size="19" text-anchor="middle" font-weight="700" fill="#0b1f3a">Concrete pad and transformer</text>
+  <rect x="130" y="230" width="125" height="150" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="4"/>
+  <text x="192" y="295" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="700" fill="#0b1f3a">HV</text>
+  <text x="192" y="320" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#334155">zone</text>
+  <rect x="945" y="230" width="125" height="150" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="4"/>
+  <text x="1007" y="295" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="700" fill="#0b1f3a">LV</text>
+  <text x="1007" y="320" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#334155">zone</text>
+  <path d="M150 450 H1050 V150 H150 Z" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="9 8"/>
+  <text x="880" y="505" font-family="Arial, sans-serif" font-size="17" fill="#166534">Earthing ring / rods — verify by site design</text>
+</svg>

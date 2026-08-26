@@ -28,11 +28,12 @@ def csv_record_count(path: Path) -> int:
 
 
 def dataset_entry(path: Path) -> dict[str, int | str]:
+    payload = path.read_bytes().replace(b"\r\n", b"\n")
     return {
         "filename": path.name,
         "schema_version": SCHEMA_VERSION,
         "record_count": csv_record_count(path),
-        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "sha256": hashlib.sha256(payload).hexdigest(),
     }
 
 

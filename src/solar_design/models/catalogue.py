@@ -48,6 +48,13 @@ class InverterSpec:
     model: str
     ac_power_kw: Decimal
     ac_voltage_v: Decimal | None
+    dc_max_voltage_v: Decimal | None = None
+    startup_voltage_v: Decimal | None = None
+    mppt_min_voltage_v: Decimal | None = None
+    mppt_max_voltage_v: Decimal | None = None
+    max_short_circuit_current_per_mppt_a: Decimal | None = None
+    inputs_per_mppt: int | None = None
+    ac_connection: str | None = None
     phases: PhaseConfiguration | None = PhaseConfiguration.THREE_PHASE
     ac_apparent_power_kva: Decimal | None = None
     nominal_current_a: Decimal | None = None
@@ -74,12 +81,25 @@ class InverterSpec:
             "dc_ac_ratio",
             "maximum_dc_input_current_a",
             "maximum_input_current_per_mppt_a",
+            "dc_max_voltage_v",
+            "startup_voltage_v",
+            "mppt_min_voltage_v",
+            "mppt_max_voltage_v",
+            "max_short_circuit_current_per_mppt_a",
         ):
             value = getattr(self, name)
             if value is not None:
                 require_positive(value, name)
         if self.mppt_count is not None and self.mppt_count <= 0:
             raise ValueError("mppt_count must be greater than zero")
+        if self.inputs_per_mppt is not None and self.inputs_per_mppt <= 0:
+            raise ValueError("inputs_per_mppt must be greater than zero")
+        if (
+            self.mppt_min_voltage_v is not None
+            and self.mppt_max_voltage_v is not None
+            and self.mppt_min_voltage_v > self.mppt_max_voltage_v
+        ):
+            raise ValueError("mppt_min_voltage_v must not exceed mppt_max_voltage_v")
 
     @property
     def record_id(self) -> str:
@@ -120,12 +140,15 @@ class CableSpec:
     cross_section_mm2: Decimal
     outside_diameter_mm: Decimal | None
     temperature_rating_c: Decimal | None
+    system: str | None = None
 
     def __post_init__(self) -> None:
         if not self.model.strip():
             raise ValueError("model must not be blank")
         if not self.family.strip():
             raise ValueError("family must not be blank")
+        if self.system is not None and not self.system.strip():
+            raise ValueError("system must not be blank when supplied")
         if self.voltage_class_v is not None:
             require_positive(self.voltage_class_v, "voltage_class_v")
         require_positive(self.cross_section_mm2, "cross_section_mm2")

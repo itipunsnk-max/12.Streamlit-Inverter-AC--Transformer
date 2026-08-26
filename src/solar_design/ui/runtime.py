@@ -10,6 +10,9 @@ import streamlit as st
 from .state import WorkspaceCoordinator, WorkspaceState
 
 STATE_KEY = "workspace_state"
+DEFAULT_RELEASE_DIR = (
+    Path(__file__).resolve().parents[3] / "data" / "releases" / "2026.08-draft"
+)
 
 
 def initialize_workspace(release_dir: str | Path) -> WorkspaceState:
@@ -24,7 +27,10 @@ def initialize_workspace(release_dir: str | Path) -> WorkspaceState:
 def get_workspace_state() -> WorkspaceState:
     state = st.session_state.get(STATE_KEY)
     if not isinstance(state, WorkspaceState):
-        raise RuntimeError("WorkspaceState has not been initialized by app.py")
+        # Streamlit can execute a page directly from a copied/deep-linked URL.
+        # Initialize the same pinned release used by app.py so that route order
+        # never determines whether the workflow button is available.
+        return initialize_workspace(DEFAULT_RELEASE_DIR)
     return state
 
 

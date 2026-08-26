@@ -659,11 +659,105 @@ def allocate_cable_conduits(
 ) -> ConduitAllocation:
     """Allocate catalogue cable pieces, preserving missing OD as ``MISSING``."""
 
-    identifiers = {cable.record_id for cable in cables}
-    if len(identifiers) != len(cables):
-        raise EngineeringValidationError("cables", "contains duplicate record IDs")
     return allocate_conduits(
         tuple(cable.outside_diameter_mm for cable in cables),
         conduits,
         max_conduits=max_conduits,
+    )
+
+
+def allocate_parallel_circuit_conduits(
+    phase_cable: CableSpec,
+    pe_cable: CableSpec | None,
+    conduits: Sequence[ConduitSpec],
+    *,
+    phase_conductors_per_run: int,
+    neutral_conductors_per_run: int,
+    parallel_runs: int,
+) -> ConduitAllocation:
+    """Keep each parallel phase/neutral/PE circuit set together in one conduit."""
+
+    if phase_conductors_per_run <= 0:
+        raise EngineeringValidationError(
+            "phase_conductors_per_run", "must be greater than zero"
+        )
+    if neutral_conductors_per_run < 0:
+        raise EngineeringValidationError(
+            "neutral_conductors_per_run", "must not be negative"
+        )
+    if parallel_runs <= 0:
+        raise EngineeringValidationError("parallel_runs", "must be greater than zero")
+    if pe_cable is None:
+        return _missing_conduit_allocation(
+            Finding(
+                "PE_CABLE_MISSING",
+                "No exact PE cable is available; conduit fill is not assessed with an "
+                "incomplete physical cable set.",
+                FindingSeverity.REVIEW,
+                VerificationStatus.UNKNOWN,
+                field="pe_cable",
+            ),
+            cable_count=(phase_conductors_per_run + neutral_conductors_per_run + 1)
+            * parallel_runs,
+            cable_od_values=(),
+        )
+
+    main_count = phase_conductors_per_run + neutral_conductors_per_run
+    one_set = (*((phase_cable,) * main_count), pe_cable)
+    single = allocate_cable_conduits(one_set, conduits, max_conduits=1)
+    if not single.runs:
+        return single
+
+    base_run = single.runs[0]
+    pieces_per_run = len(one_set)
+    runs = tuple(
+        ConduitRun(
+            base_run.conduit_id,
+            tuple(range(index * pieces_per_run, (index + 1) * pieces_per_run)),
+            base_run.cable_count,
+            base_run.occupied_area_mm2,
+            base_run.internal_area_mm2,
+            base_run.permitted_fill_percent,
+            base_run.actual_fill_percent,
+        )
+        for index in range(parallel_runs)
+    )
+    decision = DecisionRecord(
+        stable_decision_id(
+            "COND-FILL-CIRCUIT-SETS",
+            phase_cable.record_id,
+            pe_cable.record_id,
+            phase_conductors_per_run,
+            neutral_conductors_per_run,
+            parallel_runs,
+            single.conduit_id,
+        ),
+        "wiring",
+        "COND-FILL",
+        RULES.get("COND-FILL").version,
+        single.decision.verification_status,
+        (
+            TraceValue("phase_cable_id", phase_cable.record_id),
+            TraceValue("pe_cable_id", pe_cable.record_id),
+            TraceValue("phase_conductors_per_run", phase_conductors_per_run),
+            TraceValue("neutral_conductors_per_run", neutral_conductors_per_run),
+            TraceValue("pe_conductors_per_run", 1),
+            TraceValue("parallel_runs", parallel_runs),
+        ),
+        calculated_values=(TraceValue("physical_cables_per_run", pieces_per_run),),
+        selected_values=(
+            TraceValue("conduit_id", single.conduit_id),
+            TraceValue("conduit_count", parallel_runs),
+        ),
+        candidates=single.decision.candidates,
+        source_ids=single.decision.source_ids,
+        findings=single.findings,
+        notes=("Each parallel circuit set remains together in one conduit.",),
+    )
+    return ConduitAllocation(
+        single.status,
+        single.conduit_id,
+        runs,
+        single.findings,
+        decision,
     )

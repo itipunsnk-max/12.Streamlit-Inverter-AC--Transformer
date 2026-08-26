@@ -35,6 +35,12 @@ class DataReleaseError(ValueError):
     """Raised when reference data is missing, malformed, or has the wrong hash."""
 
 
+def _canonical_release_bytes(payload: bytes) -> bytes:
+    """Hash text datasets with canonical LF endings on every operating system."""
+
+    return payload.replace(b"\r\n", b"\n")
+
+
 RecordModel = TypeVar("RecordModel", bound=BaseModel)
 
 
@@ -166,7 +172,7 @@ class ReleaseRepository:
         entry = self.manifest.files.get(filename)
         if entry is None:
             raise DataReleaseError(f"Dataset is not declared by manifest: {filename}")
-        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        actual = hashlib.sha256(_canonical_release_bytes(path.read_bytes())).hexdigest()
         if actual.lower() != entry.sha256.lower():
             raise DataReleaseError(f"Hash mismatch for {filename}")
 
