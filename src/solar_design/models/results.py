@@ -24,6 +24,7 @@ class InverterSelection:
     dc_ac_ratio: Decimal | None
     findings: tuple[Finding, ...]
     decision: DecisionRecord
+    selected_model_dc_ac_ratio: Decimal | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,10 +32,10 @@ class CircuitRequirement:
     circuit_id: str
     equipment_id: str
     quantity: int
-    phases: PhaseConfiguration
-    voltage_v: Decimal
+    phases: PhaseConfiguration | None
+    voltage_v: Decimal | None
     ac_power_kw: Decimal
-    design_current_a: Decimal
+    design_current_a: Decimal | None
     current_basis: str
     findings: tuple[Finding, ...]
     decision: DecisionRecord

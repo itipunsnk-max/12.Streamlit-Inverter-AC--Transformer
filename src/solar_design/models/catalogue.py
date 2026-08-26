@@ -31,6 +31,10 @@ class RecordMetadata:
         if self.effective_from and self.effective_to and self.effective_to < self.effective_from:
             raise ValueError("effective_to must be on or after effective_from")
 
+    @property
+    def source_ids(self) -> tuple[str, ...]:
+        return tuple(part.strip() for part in self.source_id.split("|") if part.strip())
+
 
 @dataclass(frozen=True, slots=True)
 class InverterSpec:
@@ -38,26 +42,32 @@ class InverterSpec:
     manufacturer: str
     model: str
     ac_power_kw: Decimal
-    ac_voltage_v: Decimal
-    phases: PhaseConfiguration = PhaseConfiguration.THREE_PHASE
+    ac_voltage_v: Decimal | None
+    phases: PhaseConfiguration | None = PhaseConfiguration.THREE_PHASE
     ac_apparent_power_kva: Decimal | None = None
     nominal_current_a: Decimal | None = None
     maximum_output_current_a: Decimal | None = None
-    minimum_power_factor: Decimal = Decimal("1")
+    minimum_power_factor: Decimal | None = None
     maximum_dc_power_kwp: Decimal | None = None
     ambient_reference_c: Decimal | None = None
     mppt_count: int | None = None
     maximum_input_current_per_mppt_a: Decimal | None = None
+    dc_ac_ratio: Decimal | None = None
+    maximum_dc_input_current_a: Decimal | None = None
 
     def __post_init__(self) -> None:
         require_positive(self.ac_power_kw, "ac_power_kw")
-        require_positive(self.ac_voltage_v, "ac_voltage_v")
-        require_between_zero_and_one(self.minimum_power_factor, "minimum_power_factor")
+        if self.ac_voltage_v is not None:
+            require_positive(self.ac_voltage_v, "ac_voltage_v")
+        if self.minimum_power_factor is not None:
+            require_between_zero_and_one(self.minimum_power_factor, "minimum_power_factor")
         for name in (
             "ac_apparent_power_kva",
             "nominal_current_a",
             "maximum_output_current_a",
             "maximum_dc_power_kwp",
+            "dc_ac_ratio",
+            "maximum_dc_input_current_a",
             "maximum_input_current_per_mppt_a",
         ):
             value = getattr(self, name)
@@ -114,6 +124,100 @@ class AmpacityRecord:
         if self.current_carrying_conductors <= 0:
             raise ValueError("current_carrying_conductors must be greater than zero")
         require_positive(self.ampacity_a, "ampacity_a")
+
+
+@dataclass(frozen=True, slots=True)
+class CorrectionFactor:
+    """One explicitly sourced derating factor in an ampacity calculation chain."""
+
+    metadata: RecordMetadata
+    factor_type: str
+    factor: Decimal
+    label: str = ""
+    conditions: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.factor_type.strip():
+            raise ValueError("factor_type must not be blank")
+        require_between_zero_and_one(self.factor, "factor")
+
+    @property
+    def record_id(self) -> str:
+        return self.metadata.record_id
+
+
+@dataclass(frozen=True, slots=True)
+class GroupingFactorSpec:
+    """A grouping-factor table row retained as a selectable correction factor."""
+
+    metadata: RecordMetadata
+    installation_family: str
+    min_groups: int
+    max_groups: int
+    factor: Decimal
+    counting_basis: str
+    conditions: str
+
+    def __post_init__(self) -> None:
+        if not self.installation_family.strip() or not self.counting_basis.strip():
+            raise ValueError("installation_family and counting_basis must not be blank")
+        if self.min_groups <= 0 or self.max_groups < self.min_groups:
+            raise ValueError("group range is invalid")
+        require_between_zero_and_one(self.factor, "factor")
+
+    @property
+    def record_id(self) -> str:
+        return self.metadata.record_id
+
+    def as_correction_factor(self) -> CorrectionFactor:
+        return CorrectionFactor(
+            metadata=self.metadata,
+            factor_type="grouping",
+            factor=self.factor,
+            label=f"{self.installation_family}:{self.min_groups}-{self.max_groups}",
+            conditions=self.conditions,
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class ProtectionCandidate:
+    """Breaker candidate that can retain incomplete Draft catalogue data."""
+
+    metadata: RecordMetadata
+    role: str
+    manufacturer: str | None = None
+    model: str | None = None
+    poles: int | None = None
+    voltage_v: Decimal | None = None
+    trip_setting_a: Decimal | None = None
+    frame_rating_a: Decimal | None = None
+    breaking_capacity_ka: Decimal | None = None
+    terminal_temperature_c: Decimal | None = None
+    adjustable_settings: str | None = None
+    coordination_status: str = "NOT_ASSESSED"
+
+    def __post_init__(self) -> None:
+        if not self.role.strip():
+            raise ValueError("role must not be blank")
+        if self.poles is not None and self.poles <= 0:
+            raise ValueError("poles must be greater than zero")
+        for name in (
+            "voltage_v",
+            "trip_setting_a",
+            "frame_rating_a",
+            "breaking_capacity_ka",
+            "terminal_temperature_c",
+        ):
+            value = getattr(self, name)
+            if value is not None:
+                require_positive(value, name)
+        if self.trip_setting_a is not None and self.frame_rating_a is not None:
+            if self.trip_setting_a > self.frame_rating_a:
+                raise ValueError("trip_setting_a must not exceed frame_rating_a")
+
+    @property
+    def record_id(self) -> str:
+        return self.metadata.record_id
 
 
 @dataclass(frozen=True, slots=True)

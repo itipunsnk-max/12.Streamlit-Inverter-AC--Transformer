@@ -87,8 +87,11 @@ def select_inverters(
         reasons: list[str] = []
         if allowed_model_ids is not None and item.record_id not in allowed_model_ids:
             reasons.append("model is outside the allowed set")
-        if voltage is not None and item.ac_voltage_v != voltage:
-            reasons.append("AC voltage does not match the system basis")
+        if voltage is not None:
+            if item.ac_voltage_v is None:
+                reasons.append("model has no sourced AC voltage")
+            elif item.ac_voltage_v != voltage:
+                reasons.append("AC voltage does not match the system basis")
         maximum_dc_power = item.maximum_dc_power_kwp
         if maximum_dc_power is None:
             reasons.append("model has no sourced maximum DC power")
@@ -114,10 +117,15 @@ def select_inverters(
             raise EngineeringValidationError(
                 "override_model_id", "does not exist in catalogue", override_model_id
             )
-        if voltage is not None and selected.ac_voltage_v != voltage:
-            raise EngineeringValidationError(
-                "override_model_id", "has an incompatible AC voltage", override_model_id
-            )
+        if voltage is not None:
+            if selected.ac_voltage_v is None:
+                raise EngineeringValidationError(
+                    "override_model_id", "has no sourced AC voltage", override_model_id
+                )
+            if selected.ac_voltage_v != voltage:
+                raise EngineeringValidationError(
+                    "override_model_id", "has an incompatible AC voltage", override_model_id
+                )
         selected_status = VerificationStatus.USER_OVERRIDE
         if selected.maximum_dc_power_kwp is None:
             quantity = 1
@@ -152,6 +160,7 @@ def select_inverters(
         else None
     )
     ratio = required / total_ac if total_ac else None
+    model_dc_ac_ratio = selected.dc_ac_ratio if selected else None
     source_ids = (selected.metadata.source_id,) if selected else ()
     if selected:
         findings.extend(
@@ -159,6 +168,27 @@ def select_inverters(
                 "INV-DC-CAPACITY", selected.metadata.verification_status, source_ids
             )
         )
+        if model_dc_ac_ratio is None:
+            findings.append(
+                Finding(
+                    "INVERTER_DC_AC_RATIO_UNKNOWN",
+                    "The selected model has no sourced DC/AC ratio; no global ratio was inferred.",
+                    FindingSeverity.WARNING,
+                    VerificationStatus.UNKNOWN,
+                    source_ids,
+                )
+            )
+        else:
+            findings.append(
+                Finding(
+                    "INVERTER_DC_AC_RATIO_MODEL_SPECIFIC",
+                    "The DC/AC ratio is an assumption scoped to this inverter model; "
+                    "it is not applied as a global ratio.",
+                    FindingSeverity.REVIEW,
+                    VerificationStatus.ASSUMPTION,
+                    source_ids,
+                )
+            )
 
     decision = DecisionRecord(
         decision_id=stable_decision_id(
@@ -168,15 +198,25 @@ def select_inverters(
         rule_id="INV-DC-CAPACITY",
         rule_version="1.0",
         verification_status=selected_status,
-        inputs=(TraceValue("required_dc_power", required, "kWp"),),
+        inputs=(
+            TraceValue("required_dc_power", required, "kWp"),
+            TraceValue("required_ac_voltage", voltage, "V"),
+            TraceValue(
+                "allowed_model_ids",
+                "|".join(sorted(allowed_model_ids)) if allowed_model_ids is not None else None,
+            ),
+            TraceValue("override_model_id", override_model_id),
+        ),
         calculated_values=(
             TraceValue("installed_ac_power", total_ac, "kW"),
             TraceValue("installed_dc_capacity", total_dc, "kWp"),
-            TraceValue("dc_ac_ratio", ratio, None),
+            TraceValue("requested_to_installed_ac_ratio", ratio, None),
+            TraceValue("model_dc_ac_ratio", model_dc_ac_ratio, None),
         ),
         selected_values=(
             TraceValue("inverter_model_id", selected.record_id if selected else None),
             TraceValue("quantity", quantity),
+            TraceValue("selected_model_dc_ac_ratio", model_dc_ac_ratio, None),
         ),
         candidates=tuple(candidate_records),
         source_ids=source_ids,
@@ -184,14 +224,15 @@ def select_inverters(
         override_reason=override_reason if override_model_id else None,
     )
     return InverterSelection(
-        selected.record_id if selected else None,
-        quantity,
-        required,
-        total_ac,
-        total_dc,
-        ratio,
-        tuple(findings),
-        decision,
+        selected_model_id=selected.record_id if selected else None,
+        quantity=quantity,
+        required_dc_power_kwp=required,
+        total_ac_power_kw=total_ac,
+        total_dc_capacity_kwp=total_dc,
+        dc_ac_ratio=ratio,
+        findings=tuple(findings),
+        decision=decision,
+        selected_model_dc_ac_ratio=model_dc_ac_ratio,
     )
 
 
@@ -223,6 +264,20 @@ def calculate_ac_circuits(
             current = inverter.maximum_output_current_a
             basis = "manufacturer_maximum_output_current"
             current_status = inverter.metadata.verification_status
+        elif inverter.ac_voltage_v is None or inverter.phases is None:
+            current = None
+            basis = "not_assessed_missing_voltage_or_phase"
+            current_status = VerificationStatus.UNKNOWN
+            findings.append(
+                Finding(
+                    "INVERTER_CURRENT_NOT_ASSESSED",
+                    "AC current is not assessed because sourced voltage or phase configuration "
+                    "is missing; no value was inferred.",
+                    FindingSeverity.WARNING,
+                    current_status,
+                    (inverter.metadata.source_id,),
+                )
+            )
         else:
             current = calculate_ac_current(
                 inverter.ac_power_kw,
@@ -251,11 +306,17 @@ def calculate_ac_circuits(
             "1.0",
             current_status,
             (
+                TraceValue("inverter_model_id", inverter.record_id),
                 TraceValue("ac_power", inverter.ac_power_kw, "kW"),
                 TraceValue("voltage", inverter.ac_voltage_v, "V"),
+                TraceValue(
+                    "manufacturer_maximum_output_current",
+                    inverter.maximum_output_current_a,
+                    "A",
+                ),
                 TraceValue("power_factor", pf),
                 TraceValue("efficiency", eta),
-                TraceValue("phases", inverter.phases.value),
+                TraceValue("phases", inverter.phases.value if inverter.phases else None),
             ),
             calculated_values=(TraceValue("design_current", current, "A"),),
             selected_values=(TraceValue("current_basis", basis),),

@@ -2,7 +2,7 @@
 
 ## Phase 0 implementation boundary
 
-This document is the proposed data contract, not a claim that Phase 1 is complete. In Phase 0, only `sources.csv` is an audit-controlled registry. The other CSV extracts present in the checkpoint are preliminary inputs retained for later review. `manifest.json`, `design_rules.csv`, and `boq_templates.csv` do not yet exist; creating and validating them belongs to Phase 1. Consequently, the current directory must not be loaded or described as an approved runtime `ReferenceSnapshot`.
+This document is the data contract and does not imply engineering approval. Phase 1 now provides `manifest.json`, `design_rules.csv`, `boq_templates.csv`, frozen Pydantic row models, and a loader that constructs `ReferenceSnapshot`. The release remains `DRAFT`, all engineering evidence retains its verification status, and it must not be used as an approved construction reference.
 
 ## 1. Versioning and common record contract
 

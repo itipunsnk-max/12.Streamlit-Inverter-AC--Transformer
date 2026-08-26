@@ -25,9 +25,9 @@ There is no application package, test suite, dependency manifest, CI workflow, r
 
 ### Checkpoint boundary
 
-The preceding sentence describes commit `14c6ec0`, the baseline that was audited. Checkpoint commit `24d986b` also contains partial Phase 1–9 implementation artifacts. They are not evidence that those phases are complete and are frozen during Phase 0 completion. In particular, there is no release manifest and no Phase 1 contract-test suite; therefore `data/releases/2026.08-draft/` is not yet a loadable approved runtime release.
+The preceding sentence describes commit `14c6ec0`, the baseline that was audited. Checkpoint commit `24d986b` also contains partial Phase 1–9 implementation artifacts. They are not evidence that those phases are complete. Phase 1 now adds a validated manifest, Pydantic contracts, a loader, and contract tests, but `data/releases/2026.08-draft/` remains a DRAFT release and is not approved for construction use.
 
-Phase 0 completion is limited to the three planning documents, the 21-row source registry, explicit rule-to-source links, conflict/owner-decision records, and automated repository-audit tests. Runtime schemas, manifest generation, calculation code, Streamlit UI, CI coverage gates, and application tests remain later-phase work.
+Phase 0 completion was limited to the three planning documents, the 21-row source registry, explicit rule-to-source links, conflict/owner-decision records, and automated repository-audit tests. Phase 1 data-contract work is recorded separately in `docs/CODEX_HANDOFF.md`; calculation behavior, Streamlit UI, and application tests remain later-phase work.
 
 ## 2. Product objective and workflow
 
